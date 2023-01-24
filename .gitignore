@@ -2,3 +2,4 @@
 blog/core/admin.py
 *.pyc
 blog/db.sqlite3
+blog/blog/__pycache__/settings.cpython-310.pyc

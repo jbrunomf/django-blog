@@ -1,1 +1,3 @@
 /venv
+blog/core/admin.py
+*.pyc

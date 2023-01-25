@@ -8,10 +8,11 @@
             <a href="{{ post.get_absolute_url }}">
                 {{ post.title }}</a>
         </h2>
+        <p class="tags">Tags: {{ post.tags.all|join:"," }}</p>
         <p class="date">
             Published {{ post.publish }} by {{ post.author }}
         </p>
         {{ post.body|truncatewords:30|linebreaks }}
     {% endfor %}
-    {% include "core/pagination.html" with page=page_obj %}
+    {% include "core/pagination.html" with page=posts %}
 {% endblock %}

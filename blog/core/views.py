@@ -1,3 +1,6 @@
+from django.core.mail import send_mail
+from django.views.generic import ListView
+
 from .models import Post
 from django.shortcuts import render, get_object_or_404
 from .forms import EmailPostForm, CommentForm

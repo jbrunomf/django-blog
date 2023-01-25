@@ -13,14 +13,18 @@ def post_detail(request, year, month, day, post):
                              publish__year=year, publish__month=month, publish__day=day)
     comments = post.comments.filter(active=True)
     new_comment = None
+
     if request.method == 'POST':
+        # O comentário foi postado
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-
-    return render(request, 'core/post/detail.html', {'post': post})
+    else:
+        comment_form = CommentForm()
+    return render(request, 'core/post/detail.html', {'post': post, 'comments': comments,
+                                                     'new_comment': new_comment, 'comment_form': comment_form})
 
 
 class PostListView(ListView):
@@ -31,10 +35,12 @@ class PostListView(ListView):
 
 
 def post_share(request, post_id):
+    # Obtem a postagem pelo id
     post = get_object_or_404(Post, id=post_id, status='published')
     sent = False
 
     if request.method == 'POST':
+        #O formulário foi submetido
         form = EmailPostForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data

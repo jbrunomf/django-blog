@@ -1,7 +1,3 @@
-from django.shortcuts import render
-from django.views.generic import ListView
-from django.core.mail import send_mail
-from .forms import EmailPostForm
 from .models import Post
 from django.shortcuts import render, get_object_or_404
 from .forms import EmailPostForm, CommentForm
@@ -9,6 +5,7 @@ from .forms import EmailPostForm, CommentForm
 
 # Create your views here.
 def post_detail(request, year, month, day, post):
+
     post = get_object_or_404(Post, slug=post, status='published',
                              publish__year=year, publish__month=month, publish__day=day)
     comments = post.comments.filter(active=True)
@@ -52,3 +49,4 @@ def post_share(request, post_id):
     else:
         form = EmailPostForm()
     return render(request, 'core/post/share.html', {'post': post, 'form': form, 'sent': sent})
+

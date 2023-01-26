@@ -21,6 +21,11 @@
         <h2>My Blog</h2>
         <p>This is my blog</p>
         <p>Existem {% total_posts %} posts até o momento.</p>
+    
+        <p>
+            <a href="{% url 'core:post_feed' %}">Inscreva-se no meu Feed RSS</a>
+        </p>
+    
         <h3>Ultimas postagens</h3>
         {% show_latest_posts 3 %}
 

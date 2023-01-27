@@ -13,7 +13,6 @@ from django.db.models import Count
 
 # Create your views here.
 def post_detail(request, year, month, day, post):
-
     post = get_object_or_404(Post, slug=post, status='published',
                              publish__year=year, publish__month=month, publish__day=day)
     comments = post.comments.filter(active=True)
@@ -44,7 +43,7 @@ def post_list(request, tag_slug=None):
         tag = get_object_or_404(Tag, slug=tag_slug)
         object_list = object_list.filter(tags__in=[tag])
 
-    paginator = Paginator(object_list, 3) # 3 posts por página
+    paginator = Paginator(object_list, 3)  # 3 posts por página
     page = request.GET.get('page')
     try:
         posts = paginator.page(page)
@@ -69,7 +68,7 @@ def post_share(request, post_id):
     sent = False
 
     if request.method == 'POST':
-        #O formulário foi submetido
+        # O formulário foi submetido
         form = EmailPostForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
@@ -91,10 +90,9 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = SearchVector('title', 'body')
+            search_vector = SearchVector('title', weight='A') + \
+                            SearchVector('body', weight='B')
             search_query = SearchQuery(query)
-            results = Post.published.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)
-                                              ).filter(search=search_query).order_by('-rank')
+            results = Post.published.annotate(rank=SearchRank(search_vector, search_query)
+                                              ).filter(rank__gte=0.3).order_by('-rank')
     return render(request, 'core/post/search.html', {'form': form, 'query': query, 'results': results})
-
-
